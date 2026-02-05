@@ -1,0 +1,69 @@
+package fr.paul.selenium.pages;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
+
+abstract public class BasePage {
+
+    protected final WebDriverWait wait;
+    protected final WebDriver driver;
+
+    protected static String ROOT_URL = "https://www.gog.com/fr/";
+
+    public BasePage(WebDriver driver) {
+        this.driver = driver;
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+    }
+
+    protected BasePage goTo(String url) {
+        driver.get(url);
+        return this;
+    }
+
+    protected WebElement waitUntil(By locator) {
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+    }
+
+    protected WebElement waitClick(By locator) {
+        return wait.until(ExpectedConditions.elementToBeClickable(locator));
+    }
+
+    protected void type(By locator, String text) {
+        WebElement element = waitClick(locator);
+        element.click();
+        element.clear();
+        element.sendKeys(text);
+    }
+
+    protected WebElement goHover(By locator) {
+        WebElement element = waitUntil(locator);
+        new Actions(driver)
+                .moveToElement(element)
+                .perform();
+        return element;
+    }
+
+    public void keyDown(By element, Keys key){
+        WebElement webElement= waitClick(element);
+        webElement.sendKeys(key);
+    }
+
+    protected String getText(By locator) {
+        return  waitUntil(locator).getText();
+    }
+
+    public String getCurrentUrl() {
+        return driver.getCurrentUrl();
+    }
+
+    public void scrollTo(By locator) {
+        new Actions(driver).moveToElement(driver.findElement(locator)).perform();
+    }
+}
