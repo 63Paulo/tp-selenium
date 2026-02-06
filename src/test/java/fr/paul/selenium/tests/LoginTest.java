@@ -16,7 +16,7 @@ public class LoginTest extends BaseTest {
             "is displayed")
     public void testLoginWithValidCredentials(){
         boolean isInventoryPageDisplayed = new LoginPage(driver)
-                .login("standard_user", "secret_sauce")
+                .login(standard_user, password)
                 .isDisplayed();
         assertTrue(isInventoryPageDisplayed);
     }
@@ -28,7 +28,7 @@ public class LoginTest extends BaseTest {
     @Description("Type login information of an account that is locked out and check if the error message of " +
             "the login contains 'locked out'")
     public void testLoginWithLockedUser(){
-        new LoginPage(driver).login("locked_out_user", "secret_sauce");
+        new LoginPage(driver).login("locked_out_user", password);
         String loginError = new LoginPage(driver).getErrorMessage();
         assertTrue(loginError.contains("locked out"));
     }
@@ -39,7 +39,7 @@ public class LoginTest extends BaseTest {
     @Severity(SeverityLevel.NORMAL)
     @Description("Type an incorrect password in the login page and check if an error message is displayed")
     public void testLoginWithInvalidPassword(){
-        new LoginPage(driver).login("standard_user", "wrong_password");
+        new LoginPage(driver).login(standard_user, "wrong_password");
         boolean isErrorMessageDisplayed = new LoginPage(driver).isErrorDisplayed();
         assertTrue(isErrorMessageDisplayed);
     }

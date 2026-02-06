@@ -30,7 +30,6 @@ public class LoginPage extends BasePage {
     }
 
     public String getErrorMessage(){
-        waitUntilVisible(errorMessage);
         return getText(errorMessage);
     }
 
