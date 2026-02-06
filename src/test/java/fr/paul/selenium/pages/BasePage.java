@@ -15,11 +15,11 @@ abstract public class BasePage {
     protected final WebDriverWait wait;
     protected final WebDriver driver;
 
-    protected static String ROOT_URL = "https://www.gog.com/fr/";
+    protected static String ROOT_URL = "https://www.saucedemo.com/";
 
     public BasePage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(15));
     }
 
     protected BasePage goTo(String url) {
@@ -27,23 +27,33 @@ abstract public class BasePage {
         return this;
     }
 
-    protected WebElement waitUntil(By locator) {
+    protected WebElement waitUntilVisible(By locator) {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
-    protected WebElement waitClick(By locator) {
+    protected WebElement waitUntilClickable(By locator) {
         return wait.until(ExpectedConditions.elementToBeClickable(locator));
     }
 
+    protected void click(By locator){
+        WebElement element = waitUntilClickable(locator);
+        element.click();
+    }
+
     protected void type(By locator, String text) {
-        WebElement element = waitClick(locator);
+        WebElement element = waitUntilClickable(locator);
         element.click();
         element.clear();
         element.sendKeys(text);
     }
 
+    protected boolean isDisplayed(By locator){
+        WebElement element = waitUntilVisible(locator);
+        return element.isDisplayed();
+    }
+
     protected WebElement goHover(By locator) {
-        WebElement element = waitUntil(locator);
+        WebElement element = waitUntilVisible(locator);
         new Actions(driver)
                 .moveToElement(element)
                 .perform();
@@ -51,12 +61,12 @@ abstract public class BasePage {
     }
 
     public void keyDown(By element, Keys key){
-        WebElement webElement= waitClick(element);
+        WebElement webElement= waitUntilClickable(element);
         webElement.sendKeys(key);
     }
 
     protected String getText(By locator) {
-        return  waitUntil(locator).getText();
+        return waitUntilVisible(locator).getText();
     }
 
     public String getCurrentUrl() {
